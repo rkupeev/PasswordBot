@@ -6,6 +6,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.enums import ParseMode
 
 from random import choice
+from filters.type_filters import QuantityFilter, LenghtFilter
 
 router = Router()
 
@@ -34,8 +35,7 @@ async def new_password(message: Message, state: FSMContext):
 
 
 #quantity
-@router.message(CreatePasswords.quantity, 
-                lambda message: message.text.isdigit() and int(message.text) in range(1, 21))
+@router.message(CreatePasswords.quantity, QuantityFilter())
 async def lenght(message: Message, state: FSMContext):
     await state.update_data(quantity=message.text)
     await message.answer("✅ Готово, теперь введите длину каждого пароля (она должна быть не меньше 6 символов и не больше 25).")
@@ -43,8 +43,7 @@ async def lenght(message: Message, state: FSMContext):
 
 
 #lenght
-@router.message(CreatePasswords.lenght, 
-                lambda message: message.text.isdigit() and int(message.text) in range(6, 26))
+@router.message(CreatePasswords.lenght, LenghtFilter())
 async def lenght(message: Message, state: FSMContext):
     await state.update_data(lenght=message.text)
     user_data = await state.get_data()
